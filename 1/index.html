@@ -32,6 +32,7 @@
     between the two vectors. Below are the aligment results, with the displacement computed and runtime shown.
     Note that x is vertical y is horizontal per image convention.
     </p>
+
     <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
         <figure style="flex: 1; text-align: center;">
         <img src="./images/small_single/aligned_cathedral_color_vanilla_ncc_small_im_09_17_19_53.jpg" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
@@ -59,10 +60,12 @@
             </figcaption>
         </figure>
     </div>
+
     <p>
        We note that we have a great alignment with great run time on these smaller images, where the image is clear with no
        visible artifacting.
     </p>
+    
     <h4> Image Pyramid Implementation </h4>
     <p>
     Vanilla alignment works well for the smaller images, but doing so is prohibitively expensive on larger images. This is due 
@@ -137,6 +140,7 @@
           Runtime: 35.91s
             </figcaption>
         </figure>
+
         <figure style="flex: 1; text-align: center;">
         <img src="./images/large_pyramid/aligned_emir_color_3_layer_ncc_rerun.jpg" alt="vanilla 2" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
         <figcaption style="font-size: 0.85rem; color: #2e324d;">
@@ -146,7 +150,6 @@
             </figcaption>
         </figure>
 
-        </figure>
         <figure style="flex: 1; text-align: center;">
         <img src="./images/large_pyramid/aligned_harvesters_edge_3_layer_ncc_rerun.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
         <figcaption style="font-size: 0.85rem; color: #2e324d;">
@@ -159,7 +162,6 @@
     </div>
 
     <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
-        </figure>
         <figure style="flex: 1; text-align: center;">
         <img src="./images/large_pyramid/aligned_icon_color_3_layer_ncc_rerun.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
         <figcaption style="font-size: 0.85rem; color: #2e324d;">
@@ -169,7 +171,6 @@
             </figcaption>
         </figure>
 
-        </figure>
         <figure style="flex: 1; text-align: center;">
         <img src="./images/large_pyramid/aligned_italil_color_3_layer_ncc_rerun.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
         <figcaption style="font-size: 0.85rem; color: #2e324d;">
@@ -179,7 +180,6 @@
             </figcaption>
         </figure>
 
-        </figure>
         <figure style="flex: 1; text-align: center;">
         <img src="./images/large_pyramid/aligned_lastochikino_color_3_layer_ncc_rerun.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
         <figcaption style="font-size: 0.85rem; color: #2e324d;">
@@ -192,7 +192,6 @@
     </div>
 
     <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
-        </figure>
         <figure style="flex: 1; text-align: center;">
         <img src="./images/large_pyramid/aligned_lugano_color_3_layer_ncc_rerun.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
         <figcaption style="font-size: 0.85rem; color: #2e324d;">
@@ -224,7 +223,6 @@
     </div>
 
     <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
-        </figure>
         <figure style="flex: 1; text-align: center;">
         <img src="./images/large_pyramid/aligned_siren_color_3_layer_ncc_rerun.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
         <figcaption style="font-size: 0.85rem; color: #2e324d;">
@@ -234,7 +232,6 @@
             </figcaption>
         </figure>
 
-        </figure>
         <figure style="flex: 1; text-align: center;">
         <img src="./images/large_pyramid/aligned_three_generations_color_3_layer_ncc_rerun.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
         <figcaption style="font-size: 0.85rem; color: #2e324d;">
@@ -248,6 +245,36 @@
     <p>
     We note that our methods obtained a good alignment on most images
     </p>
+    <h4>Self Selected Images</h4>
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/selected/aligned_adobe_color_selected_image_2.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Adobe <br>
+          Red Displacement: (7, 96) Green Displacement: (10, 41) <br>
+          Runtime: 36.90s
+            </figcaption>
+        </figure>
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/selected/aligned_catholic_color_selected_image_3.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Catholic Monastary <br>
+          Red Displacement: (-13, 113) Green Displacement: (-7, 50) <br>
+          Runtime: 35.05s
+            </figcaption>
+        </figure>
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/selected/aligned_dam_color_selected_image_2.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Dam <br>
+          Red Displacement: (-22, 88) Green Displacement: (-14, 33) <br>
+          Runtime: 37.24s
+            </figcaption>
+        </figure>
+
+    </div>
 
     <h3>Bells and Whistles</h3>
     <h4>Cropping</h4>
