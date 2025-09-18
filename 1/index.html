@@ -24,8 +24,9 @@
     (which are around 300 by 300 pixels).
     We fix the blue image channel to be the trarget of alignment. That is we will take the red channel image, shift it by a 
     vector (x, y), and evaluate how good an alignment this is based on a metric. The x, y values of the displacement vector
-    that we consider are in the range of [-14, 14]. The metric used for the displayed results is the L2 norm, though we
-    also implemented using the normal cross-correlation (NCC) as the metric. Both norms treat the images as vectors. When using
+    that we consider are in the range of [-14, 14]. The metric used for the 
+    displayed results is the normal cross-correlation (NCC) norm, though we
+    also implemented using the L2 norm as the metric. Both norms treat the images as vectors. When using
     the L2 norm, we would search of the displacement that minimizes the distance between the two image vectors. When using the 
     NCC norm, we first normalize the two image vectors and then maximize their dot product, which would mean to minimize the angles
     between the two vectors. Below are the aligment results, with the displacement computed and runtime shown.
@@ -33,28 +34,28 @@
     </p>
     <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
         <figure style="flex: 1; text-align: center;">
-        <img src="./images/small_single/aligned_cathedral_color_single.jpg" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <img src="./images/small_single/aligned_cathedral_color_vanilla_ncc_small_im_09_17_19_53.jpg" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
         <figcaption style="font-size: 0.85rem; color: #2e324d;">
           Cathedral <br>
           Red Displacement: (3, 12) Green Displacement: (2, 5) <br>
-          Runtime: 0.092s
+          Runtime: 0.285s
             </figcaption>
         </figure>
         <figure style="flex: 1; text-align: center;">
-        <img src="./images/small_single/aligned_monastery_color_single.jpg" alt="vanilla 2" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <img src="./images/small_single/aligned_monastery_color_vanilla_ncc_small_im_09_17_19_53.jpg" alt="vanilla 2" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
         <figcaption style="font-size: 0.85rem; color: #2e324d;">
           Monastery <br>
           Red Displacement: (2, 3) Green Displacement: (2, -3) <br>
-          Runtime: 0.088s
+          Runtime: 0.414s
             </figcaption>
         </figure>
-        </figure>
+
         <figure style="flex: 1; text-align: center;">
-        <img src="./images/small_single/aligned_tobolsk_color_single.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <img src="./images/small_single/aligned_tobolsk_color_vanilla_ncc_small_im_09_17_19_53.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
         <figcaption style="font-size: 0.85rem; color: #2e324d;">
             Tobolsk <br>
           Red Displacement: (3, 7) Green Displacement: (3, 3) <br>
-          Runtime: 0.091s
+          Runtime: 0.475s
             </figcaption>
         </figure>
     </div>
@@ -71,7 +72,7 @@
     the original large images (the .tif files) and perform successive downsampling, generating a group of approximations of the 
     original images that becomes coarser and smaller. Prior to downsampling, we perform Gaussian filtering on the previous image
     to reduce aliasing. The downsample factor we used is two. For the larger images, we use sigma = 10 for the gaussian filter.
-    For the smaller images, we use sigma = 1. The use of a smaller filter for the small images is to prevent "overblurring," which
+    For the smaller images, we use sigma = 3. The use of a smaller filter for the small images is to prevent "overblurring," which
     destroys the images' information. The larger sigma for large images is to account for the large size and to capture more
     surrounding features of a particular pixels. We first perform the vanilla alignment on the coarsest downsampled image. This
     process computes the displacement for that particular image. This displacement is then multiplied by our downsample factor
@@ -82,39 +83,46 @@
     An implementation note is to not use too many layers, since we once again risk "overblurring" the image so that the first
     coarse displacements are incorrect. For efficiency, when we perform the image alignment, we are only operate on the center
     portions of the image that are the most feature rich and will be most useful for aligment. Otherwise, the rolling operation
-    on the large image will still be quite expensive. Below are the results
+    on the large image will still be quite expensive. For the results, we implemented a 4-layer pyramid for the large images and
+    a 3 layer pyramid for the smaller ones. We found that in general, for the NCC norm, we can add one more layer of 
+    pyramid than for the L2 norm and optain better result. In the L2 norm's case, having more layers produced bad alignment.
+    This makes us think that due to the the L2 norm focusing on on absolute positions and the NCC on angles, which is a somewhat
+    looser mathematical notion, the NCC metric is more robust when features are blurred.
+    Below are the results. Note that for emir and melon, we end up obtain good aligment when using edges as features, which
+    is shown further down the page.
     </p>
 
     <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
         <figure style="flex: 1; text-align: center;">
-        <img src="./images/small_pyramid/aligned_cathedral_color.jpg" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <img src="./images/small_pyramid/aligned_cathedral_color_2_layer_ncc_small_im_09_17_19_52.jpg" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
         <figcaption style="font-size: 0.85rem; color: #2e324d;">
           Cathedral <br>
           Red Displacement: (3, 12) Green Displacement: (2, 5) <br>
-          Runtime: 0.104s
+          Runtime: 0.144s
             </figcaption>
         </figure>
+
         <figure style="flex: 1; text-align: center;">
-        <img src="./images/small_pyramid/aligned_monastery_color.jpg" alt="vanilla 2" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <img src="./images/small_pyramid/aligned_monastery_color_2_layer_ncc_small_im_09_17_19_52.jpg" alt="vanilla 2" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
         <figcaption style="font-size: 0.85rem; color: #2e324d;">
           Monastery <br>
           Red Displacement: (2, 3) Green Displacement: (2, -3) <br>
-          Runtime: 0.111s
+          Runtime: 0.145s
             </figcaption>
         </figure>
-        </figure>
+
         <figure style="flex: 1; text-align: center;">
-        <img src="./images/small_pyramid/aligned_tobolsk_color.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <img src="./images/small_pyramid/aligned_tobolsk_color_2_layer_ncc_small_im_09_17_19_52.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
         <figcaption style="font-size: 0.85rem; color: #2e324d;">
             Tobolsk <br>
           Red Displacement: (3, 7) Green Displacement: (3, 3) <br>
-          Runtime: 0.109s
+          Runtime: 0.167s
             </figcaption>
         </figure>
     </div>
 
     <p>
-    Note that for the small images, we only implemented a 2 layer image pyramid. Going to 3 layers overblurs the image.
+    Note that for the small images, we implemented a 3 layer image pyramid.
     </p>
     <p>
     The large images:
@@ -122,29 +130,29 @@
 
     <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
         <figure style="flex: 1; text-align: center;">
-        <img src="./images/large_pyramid/aligned_church_color.jpg" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <img src="./images/large_pyramid/aligned_church_color_3_layer_ncc_rerun.jpg" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
         <figcaption style="font-size: 0.85rem; color: #2e324d;">
           Church <br>
           Red Displacement: (-4, 58) Green Displacement: (4, 25) <br>
-          Runtime: 13.04s
+          Runtime: 35.91s
             </figcaption>
         </figure>
         <figure style="flex: 1; text-align: center;">
-        <img src="./images/large_pyramid/aligned_emir_color.jpg" alt="vanilla 2" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <img src="./images/large_pyramid/aligned_emir_color_3_layer_ncc_rerun.jpg" alt="vanilla 2" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
         <figcaption style="font-size: 0.85rem; color: #2e324d;">
           Emir <br>
-          Red Displacement: (40, 56) Green Displacement: (24, 48) <br>
-          Runtime: 15.37s
+          Red Displacement: (41, -14) Green Displacement: (24, 48) <br>
+          Runtime: 38.06s
             </figcaption>
         </figure>
 
         </figure>
         <figure style="flex: 1; text-align: center;">
-        <img src="./images/large_pyramid/aligned_harvesters_color.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <img src="./images/large_pyramid/aligned_harvesters_edge_3_layer_ncc_rerun.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
         <figcaption style="font-size: 0.85rem; color: #2e324d;">
             Tobolsk <br>
-          Red Displacement: (11, 98) Green Displacement: (17, 59) <br>
-          Runtime: 15.01s
+          Red Displacement: (14, 123) Green Displacement: (17, 59) <br>
+          Runtime: 37.40s
             </figcaption>
         </figure>
 
@@ -153,31 +161,31 @@
     <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
         </figure>
         <figure style="flex: 1; text-align: center;">
-        <img src="./images/large_pyramid/aligned_icon_color.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <img src="./images/large_pyramid/aligned_icon_color_3_layer_ncc_rerun.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
         <figcaption style="font-size: 0.85rem; color: #2e324d;">
             Icon <br>
-          Red Displacement: (23, 89) Green Displacement: (17, 41) <br>
-          Runtime: 15.01s
+          Red Displacement: (23, 90) Green Displacement: (17, 41) <br>
+          Runtime: 38.19s
             </figcaption>
         </figure>
 
         </figure>
         <figure style="flex: 1; text-align: center;">
-        <img src="./images/large_pyramid/aligned_italil_color.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <img src="./images/large_pyramid/aligned_italil_color_3_layer_ncc_rerun.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
         <figcaption style="font-size: 0.85rem; color: #2e324d;">
             Italil <br>
-          Red Displacement: (35, 76) Green Displacement: (21, 38) <br>
-          Runtime: 15.44s
+          Red Displacement: (36, 77) Green Displacement: (21, 38) <br>
+          Runtime: 38.08s
             </figcaption>
         </figure>
 
         </figure>
         <figure style="flex: 1; text-align: center;">
-        <img src="./images/large_pyramid/aligned_lastochikino_color.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <img src="./images/large_pyramid/aligned_lastochikino_color_3_layer_ncc_rerun.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
         <figcaption style="font-size: 0.85rem; color: #2e324d;">
             Lastochikino <br>
-          Red Displacement: (-9, 75) Green Displacement: (-2, -3) <br>
-          Runtime: 15.39s
+          Red Displacement: (-8, 76) Green Displacement: (-2, -3) <br>
+          Runtime: 37.55s
             </figcaption>
         </figure>
 
@@ -186,31 +194,30 @@
     <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
         </figure>
         <figure style="flex: 1; text-align: center;">
-        <img src="./images/large_pyramid/aligned_lugano_color.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <img src="./images/large_pyramid/aligned_lugano_color_3_layer_ncc_rerun.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
         <figcaption style="font-size: 0.85rem; color: #2e324d;">
             Lugano <br>
           Red Displacement: (-29, 93) Green Displacement: (-16, 41) <br>
-          Runtime: 16.19s
+          Runtime: 39.68s
             </figcaption>
         </figure>
 
-        </figure>
+
         <figure style="flex: 1; text-align: center;">
-        <img src="./images/large_pyramid/aligned_melons_color.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <img src="./images/large_pyramid/aligned_melons_color_3_layer_ncc.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
         <figcaption style="font-size: 0.85rem; color: #2e324d;">
             Melons <br>
-          Red Displacement: (20, 74) Green Displacement: (9, 81) <br>
-          Runtime: 16.27s
+          Red Displacement: (14, 154) Green Displacement: (10, 81) <br>
+          Runtime: 37.66s
             </figcaption>
         </figure>
 
-        </figure>
         <figure style="flex: 1; text-align: center;">
-        <img src="./images/large_pyramid/aligned_self_portrait_color.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <img src="./images/large_pyramid/aligned_self_portrait_color_3_layer_ncc_rerun.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
         <figcaption style="font-size: 0.85rem; color: #2e324d;">
             Self Portrait <br>
-          Red Displacement: (56, 56) Green Displacement: (29, 78) <br>
-          Runtime: 15.39s
+          Red Displacement: (37, 175) Green Displacement: (29, 78) <br>
+          Runtime: 38.31s
             </figcaption>
         </figure>
 
@@ -219,21 +226,21 @@
     <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
         </figure>
         <figure style="flex: 1; text-align: center;">
-        <img src="./images/large_pyramid/aligned_siren_color.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <img src="./images/large_pyramid/aligned_siren_color_3_layer_ncc_rerun.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
         <figcaption style="font-size: 0.85rem; color: #2e324d;">
             Siren <br>
           Red Displacement: (-24, 96) Green Displacement: (-5, 49) <br>
-          Runtime: 16.06s
+          Runtime: 40.13s
             </figcaption>
         </figure>
 
         </figure>
         <figure style="flex: 1; text-align: center;">
-        <img src="./images/large_pyramid/aligned_three_generations_color.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <img src="./images/large_pyramid/aligned_three_generations_color_3_layer_ncc_rerun.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
         <figcaption style="font-size: 0.85rem; color: #2e324d;">
             Three Generations <br>
-          Red Displacement: (11, 98) Green Displacement: (15, 52) <br>
-          Runtime: 15.49s
+          Red Displacement: (12, 110) Green Displacement: (15, 51) <br>
+          Runtime: 37.45s
             </figcaption>
         </figure>
 
@@ -255,52 +262,55 @@
 
     <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
         <figure style="flex: 1; text-align: center;">
-        <img src="./images/large_pyramid/aligned_lastochikino_color.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <img src="./images/large_pyramid/aligned_church_color_3_layer_ncc_rerun.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
         <figcaption style="font-size: 0.85rem; color: #2e324d;">
-            Original Lastochikino <br>
+            Original Church <br>
             </figcaption>
         </figure>
 
         <figure style="flex: 1; text-align: center;">
-        <img src="./images/cropped/aligned_cropped_lastochikino_color.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <img src="./images/cropped/aligned_cropped_church_color_3_layer_ncc_rerun.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
         <figcaption style="font-size: 0.85rem; color: #2e324d;">
-            Cropped Lastochikino <br>
+            Cropped Church <br>
             </figcaption>
         </figure>
     </div>
 
     <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
         <figure style="flex: 1; text-align: center;">
-        <img src="./images/large_pyramid/aligned_lugano_color.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <img src="./images/large_pyramid/aligned_harvesters_edge_3_layer_ncc_rerun.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
         <figcaption style="font-size: 0.85rem; color: #2e324d;">
-            Original Lugano <br>
+            Original Harvesters <br>
             </figcaption>
         </figure>
 
         <figure style="flex: 1; text-align: center;">
-        <img src="./images/cropped/aligned_cropped_lugano_color.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <img src="./images/cropped/aligned_cropped_harvesters_edge_3_layer_ncc_rerun.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
         <figcaption style="font-size: 0.85rem; color: #2e324d;">
-            Cropped Lugano <br>
+            Cropped Harvesters <br>
             </figcaption>
         </figure>
     </div>
 
     <h4>Contrasting</h4>
     <p>
-    For contrasting, we perform histogram equilization on the images. We see a strong effect on the resulting images: the colors are often more "realistic," and certain features such as the edges of the clouds become clearer.
+    For contrasting, we perform histogram equilization on the images. We see a strong effect on the resulting images:
+    the colors are often more "realistic," and certain features such as the edges of the clouds become clearer.
     The contrast between adjacent color patches are also stronger, and the picture takes on less of a pastel atmosphere
+    Note that in order for the pure color edges to not affect the histogram, we crop the border first using the 
+    automated cropping shown above and then perform histogram equilization.
     </p>
 
     <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
         <figure style="flex: 1; text-align: center;">
-        <img src="./images/cropped/aligned_cropped_lastochikino_color.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <img src="./images/cropped/aligned_cropped_lastochikino_color_3_layer_ncc_rerun.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
         <figcaption style="font-size: 0.85rem; color: #2e324d;">
             Original Lastochikino <br>
             </figcaption>
         </figure>
 
         <figure style="flex: 1; text-align: center;">
-        <img src="./images/hist/aligned_rescaled_histogram_lastochikino_color.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <img src="./images/hist/aligned_rescaled_histogram_lastochikino_color_3_layer_ncc_rerun.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
         <figcaption style="font-size: 0.85rem; color: #2e324d;">
             Histogram Equilized Lastochikino <br>
             </figcaption>
@@ -309,16 +319,32 @@
 
     <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
         <figure style="flex: 1; text-align: center;">
-        <img src="./images/cropped/aligned_cropped_siren_color.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <img src="./images/cropped/aligned_cropped_lugano_color_3_layer_ncc_rerun.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
         <figcaption style="font-size: 0.85rem; color: #2e324d;">
-            Original Siren <br>
+            Original Lugano <br>
             </figcaption>
         </figure>
 
         <figure style="flex: 1; text-align: center;">
-        <img src="./images/hist/aligned_rescaled_histogram_siren_color.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <img src="./images/hist/aligned_rescaled_histogram_lugano_color_3_layer_ncc_rerun.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
         <figcaption style="font-size: 0.85rem; color: #2e324d;">
-            Histogram Equilized Siren <br>
+            Histogram Equilized Lugano <br>
+            </figcaption>
+        </figure>
+    </div>
+
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/cropped/aligned_cropped_self_portrait_color_3_layer_ncc_rerun.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Original Lugano <br>
+            </figcaption>
+        </figure>
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/hist/aligned_rescaled_histogram_self_portrait_color_3_layer_ncc_rerun.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Histogram Equilized Self Portrait <br>
             </figcaption>
         </figure>
     </div>
@@ -331,14 +357,125 @@
     as its green roof pops out more, and we in general have a more realistic image that is less painting like.
     </p>
 
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/large_pyramid/aligned_lugano_color_3_layer_ncc_rerun.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Original Lugano <br>
+            </figcaption>
+        </figure>
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/white_balance/aligned_white_balanced_lugano_color_3_layer_ncc.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            White Balanced Lugano <br>
+            </figcaption>
+        </figure>
+    </div>
+
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/large_pyramid/aligned_church_color_3_layer_ncc_rerun.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Original Church <br>
+            </figcaption>
+        </figure>
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/white_balance/aligned_white_balanced_church_color_3_layer_ncc_rerun.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            White Balanced Church <br>
+            </figcaption>
+        </figure>
+    </div>
+
+
     <h3>Color Mapping</h3>
     The color mapping algorithm we used is the histogram matching algorithm. Where given a refernce picture, we adjust the 
     color distribution of our own image such that the color distribution matches that of the reference image. A good example is
     of tobolsk below, where the reference image is a modern image of the location taken from the web, also shown below. We note
     that after the color mapping, the green hue that shrouds the image disappears, and features such as the clouds becomes a 
     lot more pronounced.
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/color_mapped/tobolsk_ref_2.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Reference Image Taken From the Web <br>
+            </figcaption>
+        </figure>
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/small_pyramid/aligned_tobolsk_color_2_layer_ncc_small_im_09_17_19_52.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Reference Image Taken From the Web <br>
+            </figcaption>
+        </figure>
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/color_mapped/aligned_color_mapped_tobolsk_color_2_layer_ncc_small_im_09_17_19_52.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Color Mapped Tobolsk <br>
+            </figcaption>
+        </figure>
+    </div>
 
 
+    <h3>Edge as Features</h3>
+    <p>
+    Finally, we note that using edge as features can give us very good alignment result. Our presumed reason for this is that
+    edges as features are strict on the values output of the metric functions such as L2 or NCC. In an edge image, the only
+    real features are the white edges and the rest of the pixels, which is in the vast majority, are 0. In simpler terms,
+    edge is a feature-sparse image.
+    Therefore, any misalignment will dramatically lower the metric score. This is particularly useful in the case of the emir
+    image, where the great number of repeating small color patches on the emir's clothes can confuse a color-alignment algorithm
+    since partial alignment, even far off, can result in a patch of pattern aligning with a separate patch of the same pattern,
+    resulting in a deceptive high metric. When aligning by edge, assume the starting error is small in the displacement, we
+    would have a near-zero metric. The algorithm is therefore inclined to gravitate towards the correct alignment.
+    In terms of our implementation, we applied the Sobel filter first to our original image. We then proceed to use the 
+    same algorithm as in the color alignment process, except that when we downsample, we do not Gaussian-filter the image,
+    since we want the image to remain feature sparse. We also note that aligning by feature is somehow faster.
+    This is likely due to us not Gaussian filtering at each layer of the pyramid
+    </p>
+
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/large_pyramid/aligned_emir_color_3_layer_ncc_rerun.jpg" alt="vanilla 2" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+          Emir Aligned By Color<br>
+          Red Displacement: (41, -14) Green Displacement: (24, 48) <br>
+          Runtime: 38.06s
+            </figcaption>
+        </figure>
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/edge/aligned_emir_edge_3_layer_ncc_rerun.jpg" alt="vanilla 2" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+          Emir Aligned By Edge<br>
+          Red Displacement: (40, 107) Green Displacement: (24, 49) <br>
+          Runtime: 35.83s
+            </figcaption>
+        </figure>
+    </div>
+
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/large_pyramid/aligned_melons_color_3_layer_ncc.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Melons Aligned by Color <br>
+          Red Displacement: (14, 154) Green Displacement: (10, 81) <br>
+          Runtime: 36.87s
+            </figcaption>
+        </figure>
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/edge/aligned_melons_edge_3_layer_ncc_rerun.jpg" alt="vanilla 3" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Melons Aligned by Edge <br>
+          Red Displacement: (13, 178) Green Displacement: (10, 81) <br>
+          Runtime: 37.66s
+            </figcaption>
+        </figure>
+    </div>
 
 </body>
 </html>
