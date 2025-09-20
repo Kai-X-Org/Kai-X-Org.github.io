@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Portfolio</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Project 0</h1>
+
+    <p>
+    In this project we explore some interesting behaviors of our cameras.
+    </p>
+    
+    <h2>Part 1</h2>
+    <p>
+    Below are two selfies I took (forgive my lack of photogenecity). The left one is taken up close, and the second one is a
+    zoomed-in portion of one taken farther away. We noticed that the right one is less distorted than the one of the left,
+    presumably because when taking the camera up close, more of my face is taken in by the edges of my camera, which cause
+    some distortions. When taken far away, my face is mostly at the center of the image, creating a less distoreted picture.
+
+    </p>
+
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+        <figure style="flex : 1; text-align: center;">
+            <img src="./images/IMG_1863.jpg" alt="distorted" style="width: 70%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+
+        <!--<figcaption style="font-size :0.85rem;">-->
+            <!--Up close, distorted <br>-->
+        <!--</figcaption>-->
+
+        </figure>
+
+        <figure style="flex : 1; text-align: center;">
+            <img src="./images/IMG_1864.jpg" alt="distorted 2" style="width: 58%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+
+        <!--<figcaption style="font-size :0.85rem;">-->
+            <!--At distance, normal<br>-->
+        <!--</figcaption>-->
+
+        </figure>
+    </div>
+
+    <h2>Part 2</h2>
+
+    <p>
+
+    We again took two pictures. The view this time is of a garage. One is taken far away and zoomed-in (left), 
+    the other is taken up close (right)
+    to a particular position. We once again note the more distorted nature of the close-up picture, where the image sort of
+    bends close to the edges. This is due to a similar reason to the previous situation, where the light is coming in closer
+    to the camera's edges.
+
+    </p>
+
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+        <figure style="flex : 1; text-align: center;">
+            <img src="./images/IMG_1857.jpg" alt="garage" style="width: 70%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+
+        </figure>
+
+        <figure style="flex : 1; text-align: center;">
+            <img src="./images/IMG_1859.jpg" alt="garage 2" style="width: 70%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+
+        </figure>
+    </div>
+
+    <h2>Part 3</h2>
+    <p>
+    We take advantage of the preiously considered camera distortion to make the following dolly zoom: where we take pictures
+    of some objects, which each successive pictures taken farther away but zoomed in. Stringing them together, we create
+    a video where it seems like an object is getting distorted in real-time.
+    </p>
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+        <figure style="flex : 1; text-align: center;">
+            <img src="./images/proj0.gif" alt="dolly" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+
+        </figure>
+    </div>
+
+</body>
+</html>
