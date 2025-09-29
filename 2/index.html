@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>180/280A Project 2</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header><h1>180/280A Project 2</h1></header>
+    <h2 id="Intro">Introduction</h2>
+    <p>
+    In this project we apply various filter/frequency domain techniques to images for fvarious functions
+    </p>
+    <h3 id="Part 1">Convolution, Finite Difference, DoG</h4>
+    <p>
+    In this very first part we implement convolutions. Below we show the code block of our convolution implementation
+    and using it with a selfie and different filters.
+    </p>
+
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/zero_pad.png" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            implementing zero-padding
+            </figcaption>
+        </figure>
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/conv.png" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Convolution implementation: conv2d is the main function, where
+            we flip the filter and the apply cross-correlation
+            </figcaption>
+        </figure>
+    </div>
+
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/selfie.jpg" alt="vanilla 1" style="width: 50%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Original selfie 
+            </figcaption>
+        </figure>
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/1.1box.png" alt="vanilla 1" style="width: 120%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            applying the box filter
+            </figcaption>
+        </figure>
+    </div>
+
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/1.1dx.png" alt="vanilla 1" style="width: 120%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            applying the dx filter
+            </figcaption>
+        </figure>
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/1.1dy.png" alt="vanilla 1" style="width: 120%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            applying the dy filter
+            </figcaption>
+        </figure>
+    </div>
+    
+    <h4> Cameraman </h4>
+    <p>
+    We now apply some filtering techniques to the cameraman image.
+    </p>
+
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/1.2dx.jpg" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Convolution with Dx
+            </figcaption>
+        </figure>
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/1.2Dy_out.png" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Convolution with Dy
+            </figcaption>
+        </figure>
+
+    </div>
+
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/1.2_grad_mag.png" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Gradient Magnitude 
+            </figcaption>
+        </figure>
+    </div>
+
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/1.2_edge.png" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Binarized edge filter. Dx and Dy are both applied to the image. We then
+            used a cut off threshold of 0.15.
+            </figcaption>
+        </figure>
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/1.3_filtered_edge.png" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            We repeated the binarized edge process, except now we gaussian-filter the image first. The threshold is the same.
+            Due to the low-pass filter application, we get a lot less of the dots that gets scattered around the image.
+            If we combine steps and convolve the Gaussian with the combined (Dx, Dy) filter first and then convolve with the image,
+            we obtained the same image.
+            </figcaption>
+        </figure>
+
+    </div>
+
+    <h3>Sharpening</h3>
+    <p>
+    In this section we explore some image sharpening techniques. We note that image sharpening can be achived by adding 
+    an image's high-frequency components to itself (i.e. emphasizing the edges). Here, we take a picture and get its
+    high-frequency componenets by subtrating from the original image the gaussian filtered image (subtracting away
+    the low frequencies). We then add it back to the high frequency picture. We were able to combine all this
+    into a single convolution operation on the original image. The resulting unsharp filter is equal to
+    2 - G, where 2 is the doubling filter, with the center entry being 2 and the rest of the entry being 0. G is the
+    Gaussian filter. We show some results below:
+    </p>
+
+
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/taj.jpg" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Sharped Taj image with the unsharp filter
+            </figcaption>
+        </figure>
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/kings.jpg" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Sharpened image of the chapel in King's College, Cambridge
+            </figcaption>
+        </figure>
+
+    </div>
+
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/unsharp_taj.png" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Sharped Taj image with the unsharp filter. We noticed that the lines and edges are more accentuated
+            </figcaption>
+        </figure>
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/unsharp_kings.png" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Sharpened image of the chapel in King's College, Cambridge. We have a similar effect as with the Taj image.
+            </figcaption>
+        </figure>
+
+    </div>
+
+    <p>
+    A good question is what is the effect of blurring an image first and then sharpening it? Will we get the same image?
+    Let's see the folloing images:
+    </p>
+
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/pisa.jpg" alt="vanilla 1" style="width: 80%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            The original image of the Tower of Pisa
+            </figcaption>
+        </figure>
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/pisa_blur.png" alt="vanilla 1" style="width: 170%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            The Gaussian blurred image.
+            </figcaption>
+        </figure>
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/blur_unsharp_pisa.png" alt="vanilla 1" style="width: 150%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Blurred by Gaussian, then sharpened. Note that we did not recover the same clarity, despite becoming
+            clearer than the blurred version.
+        </figcaption>
+        </figure>
+
+    </div>
+
+    <h3>Hybrid Images</h3>
+    By overlaying and aligning the high frequencies of one image and the low frequencies of another image, we can obtain hybrid
+    images, where from afar, we see the image that is the source of the low frequencies, and from up close, we see the
+    image that is the source of the high frequencies. We show some results below. For low-pass-filtering the images, we used
+    the Gaussian filter. For high-pass filtering, we used the impulse filter.
+
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/shark.jpg" alt="vanilla 1" style="width: 80%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Image 1: A shark
+            </figcaption>
+        </figure>
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/striped_fish.jpg" alt="vanilla 1" style="width: 80%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Image 2: A striped fish
+            </figcaption>
+        </figure>
+    </div>
+
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/striped_shark.png" alt="vanilla 1" style="width: 80%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            A striped fish: Shark low pass, Fish high-pass. Low-pass gaussian sigma = 1, High-pass sigma = 3
+            </figcaption>
+        </figure>
+    </div>
+
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/horse.jpg" alt="vanilla 1" style="width: 80%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Image 1: A horse
+            </figcaption>
+        </figure>
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/tiger.jpg" alt="vanilla 1" style="width: 80%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Image 2: A tiger
+            </figcaption>
+        </figure>
+    </div>
+
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/striped_horse.png" alt="vanilla 1" style="width: 80%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            A tiger horse: Horse low pass, Fish high-pass. Low-pass gaussian sigma = 3, High-pass sigma = 1
+            </figcaption>
+        </figure>
+    </div>
+
+    <h3>Blending</h3>
+    We now experiment with multi-resolution blending. The method is relatively simple. Take two images that we wish to blend. We
+    then take a "filter" of 0 and 1's. All three are of the same size.
+    Where 0 represents areas we want to be taken from one image and 1 represents areas we
+    want to take from another image. We construct a laplacian and a gaussian stack of both image. 
+    Correspondingly, we construct a gaussian
+    pyramid of the filter. At each layer, we mix the laplacian stack layers of the two image according to the gaussian stack
+    layer of the filter. This is done by entry-wise multiplying one image by the filter and entry-wise multiplying another image
+    by (1 - filter), where 1 is the matrix of all 1s. We then add the two products together. We do this at each layer of the 
+    stack, and sum up results from all layers. Finally, we perform a similar entry-wise multiplication and sum using the
+    final gaussian stack layer of the two images and the filter. We add this result back to the sum of the "mixed laplacians."
+    This gives us the blended images shown below. Before doing that, we also did some frequency analysis of the example
+    oraple image. I.e. we try to replicate the figure shown to us on the project page by constructing a laplacian pyramid.
+
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/oraple_fil/apple_0.jpg" alt="vanilla 1" style="width: 80%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Apple at laplacian stack layer 0
+            </figcaption>
+        </figure>
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/oraple_fil/orange_0.jpg" alt="vanilla 1" style="width: 80%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Orange at laplacian stack layer 0
+            </figcaption>
+        </figure>
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/oraple_fil/oraple_0.jpg" alt="vanilla 1" style="width: 80%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Oraple at laplacian stack layer 0
+            </figcaption>
+        </figure>
+    </div>
+
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/oraple_fil/apple_2.jpg" alt="vanilla 1" style="width: 80%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Apple at laplacian stack layer 2
+            </figcaption>
+        </figure>
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/oraple_fil/orange_2.jpg" alt="vanilla 1" style="width: 80%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Orange at laplacian stack layer 2
+            </figcaption>
+        </figure>
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/oraple_fil/oraple_2.jpg" alt="vanilla 1" style="width: 80%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Oraple at laplacian stack layer 2
+            </figcaption>
+        </figure>
+    </div>
+   
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/oraple_fil/apple_4.jpg" alt="vanilla 1" style="width: 80%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Apple at laplacian stack layer 4
+            </figcaption>
+        </figure>
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/oraple_fil/orange_4.jpg" alt="vanilla 1" style="width: 80%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Orange at laplacian stack layer 4
+            </figcaption>
+        </figure>
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/oraple_fil/oraple_4.jpg" alt="vanilla 1" style="width: 80%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Oraple at laplacian stack layer 4
+            </figcaption>
+        </figure>
+    </div>
+
+
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/oraple_fil/apple_7.jpg" alt="vanilla 1" style="width: 80%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Apple at  stack layer 4
+            </figcaption>
+        </figure>
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/oraple_fil/orange_7.jpg" alt="vanilla 1" style="width: 80%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Orange at laplacian stack layer 4
+            </figcaption>
+        </figure>
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/oraple_fil/oraple_original.jpg" alt="vanilla 1" style="width: 80%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Oraple at laplacian stack layer 4
+            </figcaption>
+        </figure>
+    </div>
+
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/oraple_fil/blend.png" alt="vanilla 1" style="width: 80%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            The image blended from the original apple and orange that we produced.
+            </figcaption>
+        </figure>
+    </div>
+
+    We also blended some other images using some irregular filters:
+
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/strawberry.jpeg" alt="vanilla 1" style="width: 80%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Original strawberry image
+            </figcaption>
+        </figure>
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/kitchen.png" alt="vanilla 1" style="width: 80%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Original kitchen image
+            </figcaption>
+        </figure>
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/heart_filter.jpg" alt="vanilla 1" style="width: 80%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Heart-shaped filter we used
+            </figcaption>
+        </figure>
+    </div>
+
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/strawberry_wall.png" alt="vanilla 1" style="width: 80%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            The image blended from the original starwberry and the kitchen using the heart filter
+            </figcaption>
+        </figure>
+    </div>
+
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/waves.jpg" alt="vanilla 1" style="width: 80%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Original image of a wave painting at the National Gallery of Art
+            </figcaption>
+        </figure>
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/eye.jpg" alt="vanilla 1" style="width: 80%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Image of an eye
+            </figcaption>
+        </figure>
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/drop_filter.jpg" alt="vanilla 1" style="width: 80%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            The droplet filter we used
+            </figcaption>
+        </figure>
+    </div>
+
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/waves_eye.jpg" alt="vanilla 1" style="width: 80%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            An eye with waves
+            </figcaption>
+        </figure>
+    </div>
+
+    <p>
+    Analysis image on the stawberry wall image (might have to zoom in a little):
+    </p>
+
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/swall_fil/straw_0.jpg" alt="vanilla 1" style="width: 80%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            </figcaption>
+        </figure>
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/swall_fil/wall_0.jpg" alt="vanilla 1" style="width: 80%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            </figcaption>
+        </figure>
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/swall_fil/swall_0.jpg" alt="vanilla 1" style="width: 80%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            </figcaption>
+        </figure>
+    </div>
+
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/swall_fil/straw_2.jpg" alt="vanilla 1" style="width: 80%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            </figcaption>
+        </figure>
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/swall_fil/wall_2.jpg" alt="vanilla 1" style="width: 80%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            </figcaption>
+        </figure>
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/swall_fil/swall_2.jpg" alt="vanilla 1" style="width: 80%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            </figcaption>
+        </figure>
+
+    </div>
+
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/swall_fil/straw_4.jpg" alt="vanilla 1" style="width: 80%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            </figcaption>
+        </figure>
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/swall_fil/wall_4.jpg" alt="vanilla 1" style="width: 80%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            </figcaption>
+        </figure>
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/submission_images/swall_fil/swall_4.jpg" alt="vanilla 1" style="width: 80%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            </figcaption>
+        </figure>
+    </div>
+
+</body>
+</html>
