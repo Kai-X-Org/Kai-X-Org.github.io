@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>180/280A Project 2</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header><h1>180/280A Project 2</h1></header>
+    <h2 id="Intro">Introduction</h2>
+    <p>
+    In this project we implement some image warping and mosaicing, building towards automatic stitching of photo mosaics.
+    </p>
+    <h2> Part A </h2>
+    <p>
+    We conduct this part of the project on the following pairs of images shown below. Each pair is taken
+    by fixing the camera and taking two images that differ by a camera rotation. There was no translation.
+    </p>
+
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+        
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/map_left.jpg" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            </figcaption>
+        </figure>
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/map_right.jpg" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            </figcaption>
+        </figure>
+    </div>
+
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+        
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/painting_left.jpg" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            </figcaption>
+        </figure>
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/painting_right.jpg" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            </figcaption>
+        </figure>
+    </div>
+    
+    <p>
+    The map and paintings themselves should offer plenty of features for alignment.
+    </p>
+
+    <p>
+    To obtain the homography, we implemented the following code shown below to solve for the homography parameters
+    using least squares. We set the matrix to have entries comprised of corresponding points between the two images.
+    The matrix A multiplies the vector of homography entries to yield 0, giving us an equation to solve.
+    </p>
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+        
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/get_hom_code.png" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            </figcaption>
+        </figure>
+
+    </div>
+
+</body>
+</html>
