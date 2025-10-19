@@ -59,16 +59,65 @@
     To obtain the homography, we implemented some least squares code to solve for the homography parameters
     using least squares. We set the matrix to have entries comprised of corresponding points between the two images.
     The matrix A multiplies the vector of homography entries to yield 0, giving us an equation to solve.
+    The matrix involved in the system of equations and the computed homography are shown below:
     </p>
-    <!--<div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">-->
-        
-        <!--<figure style="flex: 1; text-align: center;">-->
-        <!--<img src="./images/get_hom_code.png" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">-->
-        <!--<figcaption style="font-size: 0.85rem; color: #2e324d;">-->
-            <!--</figcaption>-->
-        <!--</figure>-->
 
-    <!--</div>-->
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+        
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/A_matrix.png" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            The A matrix
+            </figcaption>
+        </figure>
+    </div>
+
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/b_matrix.png" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            The b matrix
+            </figcaption>
+        </figure>
+    </div>
+
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/homography.png" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            The homography
+            </figcaption>
+        </figure>
+    </div>
+
+    <h2> Image warping </h2>
+    <p>
+    Here, we implement image warping. Warping is accomplished by inverse warping.
+    We implement warping with two kinds of interpolation techniques: nearest neighbor
+    and biliniear. Nearest neighbor
+    Starting with an empty matrix as the target image, we us the inverse homogrphy between two images to yield the positional
+    mapping from the target image to the original image. 
+    In the nearest neighbor scheme, we round the output position to the nearest integer coordinates, and
+    use the color intensity values at that point in the original image for the corresponding point on the target image.
+    In the bilinear interpolation scheme, we use the average of the color values of the four nearest pixels in the original
+    image. The results are shown below for the painting images shown above. We do see that upon zooming in, the bilinear
+    interpolation gives a somewhat sharper image
+    </p>
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/image_warped_bl.jpg" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Bilinear interpolation warp of the right image, with the "left" painting image as reference 
+            </figcaption>
+        </figure>
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/image_warped_nn.jpg" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            NN interpolation warp of the right image, with the "left" painting image as reference 
+            </figcaption>
+        </figure>
+    </div>
+    
 
 </body>
 </html>
