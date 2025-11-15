@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>180/280A Project 4</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header><h1>180/280A Project 4</h1></header>
+    <h2 id="Intro">Introduction</h2>
+    <p>
+    In this project we implement, train, and apply a neuaral radiance field network to conduct
+    view synthesis on 3D objects based on 2D images taken from different view points.
+    </p>
+    <h2> Part 1 </h2>
+    <p>
+    We start simple. In this first part we implement a 2D Neural Field, where an image coordinate is given, and the field
+    returns its approximation of the corresponding pixel values at that position in the original image. Our architecture
+    starts by conducting the sinusoidal positional encoding shown in the original Nerf paper, except that we also concatenate
+    the input itself to the positional encoding. This facilitates the representation of higher frequency image signals and allows
+    the field to successfully capture finer details. The main body of the network is quite simple: 3 MLP layers followed by the
+    ReLU activation. The final output head is a linear layer followed by a sigmoid activation, since our output pixels values
+    are normalized. Below we show the original picture and approximations by our radiance fields at with different parameters.
+    The learning rate for the optimizer is kept the same at 0.001, and we modify the dimension of the MLP layers as well as 
+    the highest frequencies of the positional encoding. Training lasted 2000 iterations.
+    </p>
+
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+        
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/fox_256_L10.png" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Hidden dim 256, L = 10
+            </figcaption>
+        </figure>
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/fox.jpg" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Original Fox Image
+            </figcaption>
+        </figure>
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/fox_256_L20.png" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Hidden dim 256, L = 20
+            </figcaption>
+        </figure>
+    </div>
+
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+        
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/fox_256_L20.png" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Hidden dim 256, L = 20
+            </figcaption>
+        </figure>
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/fox.jpg" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Original Fox Image
+            </figcaption>
+        </figure>
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/fox_1024_L20.png" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Hidden dim 1024, L = 20
+            </figcaption>
+        </figure>
+    </div>
+    
+    <h4>Part 2</h4>
+    <p>
+    We then proceeded to implement nerf. We first need to set up all the basis transformation and the dataloading
+    functionalities. This process was relatively straightforward: mostly matrix multiplications. However, to support
+    batched coordinate transformation, we resorted to using the einsum function from numpy, which allow us to conduct
+    matrix multiplication at the last two dimension for an array of arbitrary dimensions. For sampling data points,
+    we "flatten" the pixels in the data point, and upon indexing, we compute the proper coordinate of the pixel in the
+    dataset.
+
+    We demonstrate the result of this set up part with the two test images below showing rays calculated and sampled:
+    </p>
+
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+        
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/ray_sample_1.png" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Camera rays sampled from across the training set
+            </figcaption>
+        </figure>
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/ray_sample_2.png" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            Camera ray sampled from a single camera
+            </figcaption>
+        </figure>
+    </div>
+
+    <p>
+    After finishing implementing dataloading, we then proceeded with implementing the Nerf architecture. We implemented
+    the Nerf architecture as shown in the project doc. Our hidden dimension is 256, with positional encoding frequency chosen
+    to be 10 for the position input and 4 for the direction input. Learning rate remains 0.001.
+    </p>
+
+</body>
+</html>
