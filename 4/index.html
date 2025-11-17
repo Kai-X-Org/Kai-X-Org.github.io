@@ -26,7 +26,13 @@
     ReLU activation. The final output head is a linear layer followed by a sigmoid activation, since our output pixels values
     are normalized. Below we show the original picture and approximations by our radiance fields at with different parameters.
     The learning rate for the optimizer is kept the same at 0.001, and we modify the dimension of the MLP layers as well as 
-    the highest frequencies of the positional encoding. Training lasted 2000 iterations.
+    the highest frequencies of the positional encoding. Training lasted 2000 iterations, and one validation is conducted
+    every 200 iterations. It is worth noting that THROUGHOUT THIS PROJECT, while we report the PSNR of the training,
+    we are in fact minimizing the MSE loss at train time. Validation lasted 100 iterations
+    For implementation of the dataloader throughout this project, we subclass PyTorch's Dataset class. We implement the 
+    main dataloading logic in the __getitem__ function of that class. At train time, PyTorch's DataLoader class takes
+    care of sampling datapoints. Besides the provided fox picture, we also trained on a tiger picture, the training
+    result is also shown below. For that training, the time duration is the same, except that we use 256 hidden dim and L=10
     </p>
 
     <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
@@ -74,16 +80,118 @@
             </figcaption>
         </figure>
     </div>
+
+    <p>
+    Below we show the training progression across the validation checkpoint. There are 200 iterations between
+    two validation checkpoint.
+    </p>
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+        
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/fox0.png" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            200 iterations
+            </figcaption>
+        </figure>
+
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/fox3.png" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            800 iterations
+            </figcaption>
+        </figure>
+    
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/fox6.png" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            1400 iterations
+            </figcaption>
+        </figure>
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/fox9.png" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            2000 iterations
+            </figcaption>
+        </figure>
+    </div>
+
+
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+        
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/tiger0.png" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            200 iterations
+            </figcaption>
+        </figure>
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/tiger3.png" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            800 iterations
+            </figcaption>
+        </figure>
+    
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/tiger6.png" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            1400 iterations
+            </figcaption>
+        </figure>
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/tiger9.png" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            2000 iterations
+            </figcaption>
+        </figure>
+    </div>
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/tiger.jpg" alt="vanilla 1" style="width: 40%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px; margin-left: auto; margin-right: auto">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            For reference, this is the original tiger image.
+            </figcaption>
+        </figure>
+
+    </div>
+
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/fox_256_L20_loss.png" alt="vanilla 1" style="width: 40%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px; margin-left: auto; margin-right: auto">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            PSNR curve for the fox image: lower is the smoothed curve, upper is the value
+            </figcaption>
+        </figure>
+    </div>
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/tiger_loss.png" alt="vanilla 1" style="width: 40%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px; margin-left: auto; margin-right: auto">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            PSNR curve for the tiger image: lower is the smoothed curve, upper is the value
+            </figcaption>
+        </figure>
+    </div>
+
     
     <h4>Part 2</h4>
     <p>
     We then proceeded to implement nerf. We first need to set up all the basis transformation and the dataloading
-    functionalities. This process was relatively straightforward: mostly matrix multiplications. However, to support
-    batched coordinate transformation, we resorted to using the einsum function from numpy, which allow us to conduct
-    matrix multiplication at the last two dimension for an array of arbitrary dimensions. For sampling data points,
-    we "flatten" the pixels in the data point, and upon indexing, we compute the proper coordinate of the pixel in the
-    dataset.
+    functionalities. This process was relatively straightforward: mostly matrix multiplications.
+    The camera-to-world transformations are already given, the application of which is straightforward.
+    However, for every transformation and operations for Nerf, we need to support the batched-version of the operation.
+    While this is straightforward for most operations, since numpy or torch automatically matches the dimensions and entries
+    when the axis is specified, any matrix multiplication, like those involved in coordinate transformation, would require
+    a little bit more sophistication. This is due to the standard matmul operation onyl working on 2D arrays.
+    There is a solution. In our implementation, we resorted to using the einsum function from numpy, which allow us to conduct
+    matrix multiplication at the last two dimension for an array of arbitrary dimensions. We simply specified how to 
+    multiply and reduce the last two dimension in the einsum function.
+    For sampling data points, we create an indexable dataset object subclasing PyTorch's DataSet class. With the image
+    it self as the dataset, with position as input and pixel value as output.
+    For accessing the data via indexing the dataset, we "flattened" the pixels in the image datasets across all image 
+    and only upon accesing the pixel do we compute the image to which the pixel belong and the pixel's position in that image.
+    This makes randomly sampling datapoints simpler. 
 
+    Obtaining the ro and rd vector was straightforward when all the coordinate transformation functions were implemented.
+    And sampling for points along the ray was conducted according to the project docs.
     We demonstrate the result of this set up part with the two test images below showing rays calculated and sampled:
     </p>
 
@@ -105,9 +213,60 @@
 
     <p>
     After finishing implementing dataloading, we then proceeded with implementing the Nerf architecture. We implemented
-    the Nerf architecture as shown in the project doc. Our hidden dimension is 256, with positional encoding frequency chosen
+    the Nerf architecture as shown in the picture in the project doc, using the same architecture.
+    Our hidden dimension is 256, with positional encoding frequency chosen
     to be 10 for the position input and 4 for the direction input. Learning rate remains 0.001.
+    For the lego results shown in the following, we trained the network for a total 3600 iterations, with an validation conducted 
+    every 400 iterations. We show the resulting gif of the test set for checkpoints made at the second, third, fifth, seventh,
+    and final validation. 
+    We then show the PSNR curve below. The lower curve is the training PSNR, and the higher one is the validation PSNR.
+    During training, we sample the pixel along with the corresponding ro, rd vectors from the dataset. We then sampled the 
+    points along the rays. We pass those points as the positional arguments, and we pass the rd vectors as the directional
+    arguments. The obtained density and rgb results were then used for volume rendering, implemented as described in the 
+    project doc. The resulting rgb value is compared with the sample pixels to compute the MSE loss, which was used
+    for the optimization during training.
+    We note that as the training progressed, the smaller features, such as the little signature lego bumps, become rendered.
     </p>
+
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+        
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/lego_model_1.gif" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            </figcaption>
+        </figure>
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/lego_model_2.gif" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            </figcaption>
+        </figure>
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/lego_model_4.gif" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            </figcaption>
+        </figure>
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/lego_model_6.gif" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            </figcaption>
+        </figure>
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/lego_model_8.gif" alt="vanilla 1" style="width: 100%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px;">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            </figcaption>
+        </figure>
+    </div>
+    <p>
+    Below is the lego validation PSNR curve. The red is the validation curve.  We are unsure why the validation curve
+    is higher than the training curve
+    </p>
+    <div style="display: flex; justify-content: space-around; margin-top: 2rem; margin-bottom: 2rem;">
+        <figure style="flex: 1; text-align: center;">
+        <img src="./images/lego_valid_loss.png" alt="vanilla 1" style="width: 40%; height: auto; display: block; margin-bottom: 10px; border-radius: 3px; margin-left:auto, margin-right: auto">
+        <figcaption style="font-size: 0.85rem; color: #2e324d;">
+            </figcaption>
+        </figure>
+    </div>
 
 </body>
 </html>
